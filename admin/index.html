@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Адмінка</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">Адмінка</div>
+    <div class="actions">
+      <select id="section" class="input">
+        <option value="orders" selected>Замовлення</option>
+        <option value="messages">Повідомлення</option>
+      </select>
+
+
+      <span id="statusWrap">
+        <select id="status" class="input">
+          <option value="">Усі статуси</option>
+          <option value="pending">pending</option>
+          <option value="confirmed">confirmed</option>
+          <option value="cancelled">cancelled</option>
+        </select>
+      </span>
+
+      <button id="refresh" class="btn">Оновити</button>
+    </div>
+  </header>
+
+  <main class="card">
+    <div id="empty" class="empty" hidden>Нічого не знайдено</div>
+    <div class="table-wrap">
+      <table class="tbl">
+        <thead id="thead"></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer class="ft">© Адмінка — <span id="year"></span></footer>
+  <script src="admin.js?v=2" defer></script>
+</body>
+</html>
