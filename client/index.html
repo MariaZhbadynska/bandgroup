@@ -157,6 +157,7 @@
         </div>
       </header>
       <div class="modal-bd">
+        
         <form id="ticketForm" novalidate>
           <input type="hidden" name="gig" id="gigField">
           <input type="hidden" name="gigId" id="gigIdField">
@@ -182,6 +183,25 @@
       </div>
     </div>
   </dialog>
+  <dialog class="modal success" id="successModal">
+    <div class="modal-wrap">
+      <button class="modal-x" data-close aria-label="Закрити">✕</button>
+      <header class="modal-hd">
+        <div class="modal-icon ok">✓</div>
+        <div>
+          <div class="modal-pre">Дякуємо</div>
+          <h3 class="modal-ttl">Замовлення прийнято</h3>
+          <p class="modal-sub">Ми зв'яжемось з вами найближчим часом</p>
+        </div>
+      </header>
+      <div class="modal-bd">
+        <div class="actions" style="justify-content:flex-end">
+          <button class="btn btn-primary" data-close>Гаразд</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+  
 
   <script src="main.js"></script>
 </body>

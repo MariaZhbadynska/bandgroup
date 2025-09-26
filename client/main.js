@@ -119,10 +119,13 @@ ticketForm?.addEventListener("submit", async (e) => {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
+    const successModal = document.getElementById("successModal");
+
     ticketHint.textContent = `✅ Замовлення створено (ID: ${data?._id || "—"})`;
     ticketForm.reset();
     updateTotal();
-    setTimeout(() => ticketModal?.close(), 800);
+    ticketModal?.close();
+    successModal?.showModal();
   } catch (err) {
     ticketHint.textContent = `❌ ${err.message || "Помилка"}`;
   }

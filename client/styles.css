@@ -570,8 +570,9 @@ dialog.modal.ticket::backdrop {
   height: 36px;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, .12);
-  background: #111827;
+  background: #000000;
   color: #fff;
+  z-index: 1000;
   cursor: pointer
 }
 
@@ -811,3 +812,8 @@ footer {
     grid-template-columns: 1fr
   }
 }
+
+dialog.modal.success{border:none;padding:0;background:transparent}
+dialog.modal.success::backdrop{background:rgba(5,8,14,.72);backdrop-filter:blur(6px)}
+.modal-icon.ok{background:linear-gradient(180deg,#30d158,#25b84a);box-shadow:0 6px 18px rgba(48,209,88,.28);border:1px solid rgba(0,0,0,.2);color:#08140b;font-weight:900}
+.modal.success .modal-ttl{color:var(--text)}
