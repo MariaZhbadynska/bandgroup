@@ -25,7 +25,7 @@ const gigs = [
   },
 ];
 const PRICES = { std: 500, fan: 800, vip: 1200 };
-const API_BASE = location.hostname === "localhost" ? "http://localhost:8000/api" : "/api";
+const API_BASE = `${location.origin}/api`;
 const ORDERS_URL = `${API_BASE}/orders`;
 const MESSAGES_URL = `${API_BASE}/messages`;
 const gigsBody = document.getElementById("gigsBody");

@@ -1,4 +1,4 @@
-const API_BASE = location.hostname === "localhost" ? "http://localhost:8000/api" : "/api";
+const API_BASE = `${location.origin}/api`;
 const ENDPOINTS = {
   orders: `${API_BASE}/orders`,
   messages: `${API_BASE}/messages`,
