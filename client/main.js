@@ -32,9 +32,15 @@ const MESSAGES_URL = `${API_BASE}/messages`;
 
 function openDialog(dlg) {
   if (!dlg) return;
-  if (typeof dlg.showModal === "function") dlg.showModal();
-  else dlg.setAttribute("open", ""); 
+  try {
+    if (dlg.open) return;
+    if (typeof dlg.showModal === "function") dlg.showModal();
+    else dlg.setAttribute("open", "");
+  } catch (e) {
+    dlg.setAttribute("open", "");
+  }
 }
+
 function closeDialog(dlg) {
   if (!dlg) return;
   if (dlg.open && typeof dlg.close === "function") dlg.close();
@@ -170,7 +176,10 @@ ticketForm?.addEventListener("submit", async (e) => {
     ticketForm.reset();
     updateTotal();
     closeDialog(ticketModal);
-    openDialog(successModal);
+    setTimeout(() => {
+      console.log("Opening success modal…");
+      openDialog(successModal);
+    }, 0);
   } catch (err) {
     ticketHint.textContent = `❌ ${err.message || "Помилка"}`;
   }
