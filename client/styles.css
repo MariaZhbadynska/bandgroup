@@ -761,10 +761,11 @@ footer {
   .two-cols {
     grid-template-columns: 1fr
   }
-  .btn-cta{
+
+  .btn-cta {
     padding: 8px 15px;
     font-size: 12px;
-    }
+  }
 }
 
 @media (max-width: 720px) {
@@ -813,7 +814,25 @@ footer {
   }
 }
 
-dialog.modal.success{border:none;padding:0;background:transparent}
-dialog.modal.success::backdrop{background:rgba(5,8,14,.72);backdrop-filter:blur(6px)}
-.modal-icon.ok{background:linear-gradient(180deg,#30d158,#25b84a);box-shadow:0 6px 18px rgba(48,209,88,.28);border:1px solid rgba(0,0,0,.2);color:#08140b;font-weight:900}
-.modal.success .modal-ttl{color:var(--text)}
+dialog.modal.success {
+  border: none;
+  padding: 0;
+  background: transparent
+}
+
+dialog.modal.success::backdrop {
+  background: rgba(5, 8, 14, .72);
+  backdrop-filter: blur(6px)
+}
+
+.modal-icon.ok {
+  background: linear-gradient(180deg, #30d158, #25b84a);
+  box-shadow: 0 6px 18px rgba(48, 209, 88, .28);
+  border: 1px solid rgba(0, 0, 0, .2);
+  color: #08140b;
+  font-weight: 900
+}
+
+.modal.success .modal-ttl {
+  color: var(--text)
+}

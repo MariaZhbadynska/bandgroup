@@ -25,19 +25,45 @@ const gigs = [
   },
 ];
 const PRICES = { std: 500, fan: 800, vip: 1200 };
+
 const API_BASE = `${location.origin}/api`;
 const ORDERS_URL = `${API_BASE}/orders`;
 const MESSAGES_URL = `${API_BASE}/messages`;
+
+function openDialog(dlg) {
+  if (!dlg) return;
+  if (typeof dlg.showModal === "function") dlg.showModal();
+  else dlg.setAttribute("open", ""); 
+}
+function closeDialog(dlg) {
+  if (!dlg) return;
+  if (dlg.open && typeof dlg.close === "function") dlg.close();
+  else dlg.removeAttribute("open");
+}
+
 const gigsBody = document.getElementById("gigsBody");
 if (gigsBody) {
   gigs.forEach((g) => {
     const tr = document.createElement("tr");
-    tr.innerHTML = `<td data-th="Місто / Заклад">${g.place}</td><td data-th="К-сть місць">${g.seats}</td><td data-th="Дата і час">${g.date}</td><td class="btn-cell"><button class="tbl-btn" data-modal="ticket" data-gig="${g.place} — ${g.date}" data-gig-id="${g.id}">Замовити квиток</button></td>`;
+    tr.innerHTML = `
+      <td data-th="Місто / Заклад">${g.place}</td>
+      <td data-th="К-сть місць">${g.seats}</td>
+      <td data-th="Дата і час">${g.date}</td>
+      <td class="btn-cell">
+        <button class="tbl-btn"
+          data-modal="ticket"
+          data-gig="${g.place} — ${g.date}"
+          data-gig-id="${g.id}">
+          Замовити квиток
+        </button>
+      </td>`;
     gigsBody.appendChild(tr);
   });
 }
+
 const yearEl = document.getElementById("year");
 if (yearEl) yearEl.textContent = new Date().getFullYear();
+
 const burger = document.querySelector(".burger");
 const mobileMenu = document.getElementById("mobile-menu");
 const closeBtn = document.querySelector(".close-btn");
@@ -49,33 +75,48 @@ mobileMenu?.addEventListener("click", (e) => {
   const link = e.target.closest("a[href^='#']");
   if (link) mobileMenu.classList.remove("is-open");
 });
-const modals = { ticket: document.getElementById("ticketModal") };
+
+const ticketModal = document.getElementById("ticketModal");
+const successModal = document.getElementById("successModal");
+const gigField = document.getElementById("gigField");
+const gigIdField = document.getElementById("gigIdField");
+const gigPreview = document.getElementById("gigPreview");
+
 document.addEventListener("click", (e) => {
   const btn = e.target.closest("[data-modal]");
   if (!btn) return;
+
   const id = btn.dataset.modal;
   if (id === "ticket") {
-    document.getElementById("gigField").value = btn.dataset.gig || "";
-    document.getElementById("gigIdField").value = btn.dataset.gigId || "";
+    const gigText = btn.dataset.gig || "";
+    if (gigField) gigField.value = gigText;
+    if (gigIdField) gigIdField.value = btn.dataset.gigId || "";
+    if (gigPreview) gigPreview.textContent = gigText;
+
     if (ticketForm) {
       ticketForm.reset();
-      qtyEl && (qtyEl.value = "1");
-      typeEl && (typeEl.value = "std");
+      if (qtyEl) qtyEl.value = "1";
+      if (typeEl) typeEl.value = "std";
       updateTotal();
       ticketForm.querySelector("[name=name]")?.focus();
     }
+    openDialog(ticketModal);
   }
-  modals[id]?.showModal();
 });
+
 document.addEventListener("click", (e) => {
-  if (e.target.matches("[data-close]")) e.target.closest("dialog")?.close();
+  if (e.target.matches("[data-close]")) {
+    const dlg = e.target.closest("dialog");
+    closeDialog(dlg);
+  }
 });
+
 const ticketForm = document.getElementById("ticketForm");
 const qtyEl = ticketForm?.querySelector("[name=qty]");
 const typeEl = ticketForm?.querySelector("[name=type]");
 const priceHint = document.getElementById("priceHint");
 const ticketHint = document.getElementById("ticketHint");
-const ticketModal = document.getElementById("ticketModal");
+
 function updateTotal() {
   if (!qtyEl || !typeEl || !priceHint) return;
   const q = Math.max(1, Math.min(6, parseInt(qtyEl.value || "1", 10)));
@@ -84,6 +125,7 @@ function updateTotal() {
 }
 qtyEl?.addEventListener("input", updateTotal);
 typeEl?.addEventListener("change", updateTotal);
+
 function validate(form, hintEl) {
   const name = form.querySelector("[name=name]");
   const email = form.querySelector("[type=email]");
@@ -97,19 +139,23 @@ function validate(form, hintEl) {
     hintEl.textContent = "Перевір email.";
     return false;
   }
+  hintEl.textContent = "";
   return true;
 }
+
 ticketForm?.addEventListener("submit", async (e) => {
   e.preventDefault();
   if (!validate(ticketForm, ticketHint)) return;
+
   const payload = {
-    eventId: document.getElementById("gigIdField")?.value || "",
-    gig: document.getElementById("gigField")?.value || "",
+    eventId: gigIdField?.value || "",
+    gig: gigField?.value || "",
     name: ticketForm.name.value.trim(),
     email: ticketForm.email.value.trim(),
     type: ticketForm.type.value,
     count: Math.max(1, Math.min(6, parseInt(ticketForm.qty.value || "1", 10))),
   };
+
   try {
     ticketHint.textContent = "⏳ Надсилаємо…";
     const res = await fetch(ORDERS_URL, {
@@ -117,29 +163,32 @@ ticketForm?.addEventListener("submit", async (e) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-    const data = await res.json();
+    const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
-    const successModal = document.getElementById("successModal");
 
     ticketHint.textContent = `✅ Замовлення створено (ID: ${data?._id || "—"})`;
     ticketForm.reset();
     updateTotal();
-    ticketModal?.close();
-    successModal?.showModal();
+    closeDialog(ticketModal);
+    openDialog(successModal);
   } catch (err) {
     ticketHint.textContent = `❌ ${err.message || "Помилка"}`;
   }
 });
+
 const contactForm = document.getElementById("contactForm");
 const formHint = document.getElementById("formHint");
+
 contactForm?.addEventListener("submit", async (e) => {
   e.preventDefault();
   if (!validate(contactForm, formHint)) return;
+
   const payload = {
     name: contactForm.name.value.trim(),
     email: contactForm.email.value.trim(),
     message: (contactForm.message?.value || "").trim(),
   };
+
   try {
     formHint.textContent = "⏳ Надсилаємо…";
     const res = await fetch(MESSAGES_URL, {
@@ -149,6 +198,7 @@ contactForm?.addEventListener("submit", async (e) => {
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
+
     formHint.textContent = "✅ Повідомлення надіслано! Дякуємо ❤️";
     contactForm.reset();
   } catch (err) {
