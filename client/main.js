@@ -36,16 +36,29 @@ function openDialog(dlg) {
     if (dlg.open) return;
     if (typeof dlg.showModal === "function") dlg.showModal();
     else dlg.setAttribute("open", "");
-  } catch (e) {
+  } catch {
     dlg.setAttribute("open", "");
   }
 }
-
 function closeDialog(dlg) {
   if (!dlg) return;
   if (dlg.open && typeof dlg.close === "function") dlg.close();
   else dlg.removeAttribute("open");
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  new Swiper("#heroSwiper", {
+    loop: true,
+    effect: "fade",
+    speed: 600,
+    autoplay: { delay: 4000, disableOnInteraction: false },
+    pagination: { el: ".swiper-pagination", clickable: true },
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
+  });
+});
 
 const gigsBody = document.getElementById("gigsBody");
 if (gigsBody) {
@@ -56,10 +69,7 @@ if (gigsBody) {
       <td data-th="К-сть місць">${g.seats}</td>
       <td data-th="Дата і час">${g.date}</td>
       <td class="btn-cell">
-        <button class="tbl-btn"
-          data-modal="ticket"
-          data-gig="${g.place} — ${g.date}"
-          data-gig-id="${g.id}">
+        <button class="tbl-btn" data-modal="ticket" data-gig="${g.place} — ${g.date}" data-gig-id="${g.id}">
           Замовити квиток
         </button>
       </td>`;
@@ -91,14 +101,11 @@ const gigPreview = document.getElementById("gigPreview");
 document.addEventListener("click", (e) => {
   const btn = e.target.closest("[data-modal]");
   if (!btn) return;
-
-  const id = btn.dataset.modal;
-  if (id === "ticket") {
+  if (btn.dataset.modal === "ticket") {
     const gigText = btn.dataset.gig || "";
     if (gigField) gigField.value = gigText;
     if (gigIdField) gigIdField.value = btn.dataset.gigId || "";
     if (gigPreview) gigPreview.textContent = gigText;
-
     if (ticketForm) {
       ticketForm.reset();
       if (qtyEl) qtyEl.value = "1";
@@ -171,15 +178,10 @@ ticketForm?.addEventListener("submit", async (e) => {
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
-
-    ticketHint.textContent = `✅ Замовлення створено (ID: ${data?._id || "—"})`;
     ticketForm.reset();
     updateTotal();
     closeDialog(ticketModal);
-    setTimeout(() => {
-      console.log("Opening success modal…");
-      openDialog(successModal);
-    }, 0);
+    setTimeout(() => openDialog(successModal), 0);
   } catch (err) {
     ticketHint.textContent = `❌ ${err.message || "Помилка"}`;
   }
@@ -207,7 +209,6 @@ contactForm?.addEventListener("submit", async (e) => {
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
-
     formHint.textContent = "✅ Повідомлення надіслано! Дякуємо ❤️";
     contactForm.reset();
   } catch (err) {

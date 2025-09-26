@@ -7,6 +7,8 @@
   <title>Гурт «Грим та Грім» — лендінг</title>
   <meta name="description" content="Справжній український рок-гурт. Афіша, історія та контакти. Замовляй квиток!" />
   <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/swiper@11/swiper-bundle.min.css">
+  <script src="https://unpkg.com/swiper@11/swiper-bundle.min.js"></script>
 </head>
 
 <body id="top">
@@ -33,6 +35,15 @@
   </nav>
 
   <section class="hero section" id="about">
+    <div class="swiper hero-swiper" id="heroSwiper">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide"><img src="imgs/concert.jpeg" alt="Концерт 1"></div>
+        <div class="swiper-slide"><img src="imgs/concert-2.jpeg" alt="Концерт 2"></div>
+        <div class="swiper-slide"><img src="imgs/concert-3.jpeg" alt="Концерт 3"></div>
+      </div>
+      <div class="swiper-pagination"></div>
+
+    </div>
     <div class="container hero-inner">
       <h1 class="title hero-title">Гурт «Грим та Грім»</h1>
       <p class="hero-lead">Справжній український рок, який гуркоче в серці.</p>
@@ -107,7 +118,6 @@
         <h2 class="title">Зв'яжись з нами</h2>
         <p class="subtitle">Хочеш замовити виступ або маєш питання? Пиши!</p>
       </div>
-
       <div class="two-cols">
         <form id="contactForm" novalidate>
           <div class="inputs">
@@ -157,7 +167,6 @@
         </div>
       </header>
       <div class="modal-bd">
-        
         <form id="ticketForm" novalidate>
           <input type="hidden" name="gig" id="gigField">
           <input type="hidden" name="gigId" id="gigIdField">
@@ -183,6 +192,7 @@
       </div>
     </div>
   </dialog>
+
   <dialog class="modal success" id="successModal">
     <div class="modal-wrap">
       <button class="modal-x" data-close aria-label="Закрити">✕</button>
@@ -201,7 +211,6 @@
       </div>
     </div>
   </dialog>
-  
 
   <script src="main.js"></script>
 </body>
